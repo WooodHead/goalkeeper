@@ -1,15 +1,18 @@
 <template>
   <div id="app">
     <landing-page></landing-page>
+    <settings></settings>
   </div>
 </template>
 
 <script>
   import LandingPage from 'components/LandingPageView'
+  import Settings from 'components/Settings'
   import store from 'renderer/vuex/store'
   export default {
     components: {
-      LandingPage
+      LandingPage,
+      Settings
     },
     store
   }

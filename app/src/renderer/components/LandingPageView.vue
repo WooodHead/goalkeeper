@@ -15,6 +15,9 @@
       Links,
       Versions
     },
+    created() {
+      this.$store.dispatch('decrementMain')
+    },
     name: 'landing-page'
   }
 </script>
