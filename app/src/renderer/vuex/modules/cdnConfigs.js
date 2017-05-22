@@ -23,7 +23,7 @@ const mutations = {
     state.showSetting = true
   },
   [types.CONFIRM_SETTING](state) {
-    state.showSetting = false    
+    state.showSetting = false
   },
   [types.CANCEL_SETTING](state) {
     state.showSetting = false

@@ -4,7 +4,9 @@
   "description": "manage the cdn",
   "main": "./dist/main.js",
   "dependencies": {
+    "axios": "^0.16.1",
     "babel-runtime": "^6.23.0",
+    "qiniu": "^6.1.13",
     "vue": "^2.1.10",
     "vue-blu": "^0.1.9",
     "vue-electron": "^1.0.6",

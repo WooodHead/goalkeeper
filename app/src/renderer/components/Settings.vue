@@ -7,11 +7,13 @@
     <span class="icon is-large settings" @click="openSetting">
       <i class="fa fa-gear"></i>
     </span>
+    <button @click="test">测试ajax</button>
   </div>
 </template>
 
 <script>
   import { mapState, mapActions } from 'vuex'
+  import Qiniu from '../../qiniu/index'
   export default {
     name: 'setting',
     computed: mapState({
@@ -20,7 +22,13 @@
       showSetting: state => state.cdnConfigs.showSetting
     }),
     methods: {
-      ...mapActions(['changeAccessKey', 'changeSecretKey', 'openSetting', 'confirmSetting', 'cancelSetting'])
+      ...mapActions(['changeAccessKey', 'changeSecretKey', 'openSetting', 'confirmSetting', 'cancelSetting']),
+      test() {
+        new Qiniu({
+          accessKey: this.$store.state.cdnConfigs.accessKey,
+          secretKey: this.$store.state.cdnConfigs.secretKey
+        }).getBucketList().then(res => console.log(res)).catch(err => console.error(err))
+      }
     }
   }
 </script>
