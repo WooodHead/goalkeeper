@@ -15,7 +15,7 @@ export default class Qiniu {
     this.qiniu = qiniu
   }
 
-  getBucketList() {
+  getBuckets() {
     const url = 'http://rs.qbox.me/buckets'
     return axios({
       method: 'GET',

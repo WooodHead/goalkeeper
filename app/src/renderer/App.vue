@@ -2,25 +2,26 @@
   <div id="app">
     <landing-page></landing-page>
     <settings></settings>
+    <desk></desk>
   </div>
 </template>
 
 <script>
   import LandingPage from 'components/LandingPageView'
   import Settings from 'components/Settings'
+  import Desk from 'components/Desk'
   import store from 'renderer/vuex/store'
   export default {
     components: {
       LandingPage,
-      Settings
+      Settings,
+      Desk
     },
     store
   }
 </script>
 
 <style>
-  @import url(https://fonts.googleapis.com/css?family=Lato:300);
-
   * {
     margin: 0;
     padding: 0;
@@ -39,7 +40,7 @@
       );
     background-position: center;
     display: flex;
-    font-family: Lato, Helvetica, sans-serif;
+    font-family: Helvetica, sans-serif;
     justify-content: center;
     text-align: center;
   }

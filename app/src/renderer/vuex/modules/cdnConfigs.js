@@ -7,7 +7,8 @@ const state = {
   lastSecretKey: '',
   showSetting: false,
   buckets: [],
-  bucket: ''
+  bucket: '',
+  fetchBuckets: false
 }
 
 const mutations = {
@@ -29,6 +30,12 @@ const mutations = {
     state.showSetting = false
     state.accessKey = state.lastAccessKey
     state.secretKey = state.lastSecretKey
+  },
+  [types.CHANGE_BUCKETS](state, buckets) {
+    state.buckets = buckets
+  },
+  [types.CHANGE_BUCKET](state, bucket) {
+    state.bucket = bucket
   }
 }
 
