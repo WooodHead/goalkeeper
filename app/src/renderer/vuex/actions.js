@@ -43,7 +43,6 @@ export const getBuckets = ({ commit, state }) => {
       fetchFiles({ accessKey, secretKey, buckets: res.data })
     })
     .catch((err) => {
-      console.log(err)
       commit(types.CHANGE_BUCKETS, [])
       changeBucket({ commit }, '')
     })
