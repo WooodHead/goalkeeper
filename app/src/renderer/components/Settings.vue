@@ -7,7 +7,6 @@
     <span class="icon is-large settings" @click="openSetting">
       <i class="fa fa-gear"></i>
     </span>
-    <button @click="getBuckets">aaa</button>
   </div>
 </template>
 
@@ -15,6 +14,9 @@
   import { mapState, mapActions } from 'vuex'
   export default {
     name: 'setting',
+    created() {
+      this.getBuckets()
+    },
     computed: mapState({
       accessKey: state => state.cdnConfigs.accessKey,
       secretKey: state => state.cdnConfigs.secretKey,

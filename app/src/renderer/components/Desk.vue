@@ -1,11 +1,11 @@
 <template>
   <div>
-    <dropdown>
+    <dropdown trigger="hover">
       <a class="button">
         <span>{{ bucket ? bucket : '选择bucket' }}</span>
-        <span class="icon is-small">
-        <i class="fa fa-angle-down"></i>
-      </span>
+          <span class="icon is-small">
+          <i class="fa fa-angle-down"></i>
+        </span>
       </a>
       <div slot="content">
         <menus v-for="bucket in buckets">

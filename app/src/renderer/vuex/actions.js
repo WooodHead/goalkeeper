@@ -1,5 +1,6 @@
 import * as types from './mutation-types'
-import Qiniu from '../../qiniu/index'
+import Qiniu from '../../controller/qiniu/helper'
+import { fetchFiles } from '../../controller/qiniu/index'
 
 export const decrementMain = ({ commit }) => {
   commit(types.DECREMENT_MAIN_COUNTER)
@@ -39,11 +40,12 @@ export const getBuckets = ({ commit, state }) => {
       if (res.status !== 200) throw new Error('网络错误')
       commit(types.CHANGE_BUCKETS, res.data)
       changeBucket({ commit }, '')
+      fetchFiles({ accessKey, secretKey, buckets: res.data })
     })
     .catch((err) => {
+      console.log(err)
       commit(types.CHANGE_BUCKETS, [])
       changeBucket({ commit }, '')
-      this.$notify.warning({ content: '网络错误' })
     })
 }
 

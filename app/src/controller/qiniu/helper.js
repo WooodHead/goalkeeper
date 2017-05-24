@@ -1,7 +1,10 @@
 // import querystring from 'querystring';
 import axios from 'axios';
 import qiniu from 'qiniu';
-import auth from './auth';
+import crypto from 'crypto'
+import querystring from 'querystring'
+import url from 'url'
+import util from 'util'
 import httpAdapter from 'axios/lib/adapters/http'
 
 axios.defaults.adapter = httpAdapter
@@ -15,18 +18,55 @@ export default class Qiniu {
     this.qiniu = qiniu
   }
 
+  getCer(conf) {
+    const urlObj = url.parse(conf.url)
+    const signingStr = util.format('%s%s\n%s', urlObj.path, conf.query ?
+      `?${conf.query}` :
+      '', conf.body || '')
+    const sign = crypto.createHmac('sha1', conf.secretKey).update(signingStr).digest()
+    const encodedSign = new Buffer(sign)
+      .toString('base64')
+      .replace(/\//g, '_')
+      .replace(/\+/g, '-')
+
+    return util.format('%s:%s', conf.accessKey, encodedSign)
+  }
+
+  getHeaders(conf) {
+    return {
+      'Content-Type': conf.contentType || 'application/x-www-form-urlencoded',
+      'Authorization': util.format('%s %s', conf.auth, this.getCer(conf))
+    }
+  }
+
   getBuckets() {
     const url = 'http://rs.qbox.me/buckets'
     return axios({
       method: 'GET',
       url,
-      headers: auth({
+      headers: this.getHeaders({
         url,
         auth: 'QBox',
         accessKey: this.accessKey,
         secretKey: this.secretKey
       })
     });
+  }
+
+  getFiles(params) {
+    const url = 'http://rsf.qbox.me/list';
+    return axios({
+      method: 'POST',
+      url,
+      headers: this.getHeaders({
+        url,
+        query: querystring.stringify(params),
+        auth: 'QBox',
+        accessKey: this.accessKey,
+        secretKey: this.secretKey
+      }),
+      params
+    })
   }
 }
 
