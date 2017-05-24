@@ -1,14 +1,12 @@
 import Sequelize from 'sequelize'
-import { port, dbName, account, password } from '../../config/db'
-import { getUrl } from '../../utils/qiniu/index'
-// import { bucket } from '../../utils/qiniu/config';
+// import { getUrl } from '../../utils/qiniu/index'
 import msg from '../../utils/msg';
 
 const { STRING, INTEGER } = Sequelize;
 
-const sequelize = new Sequelize(dbName, account, password, {
-  dialect: 'mysql',
-  host: 'localhost',
+const sequelize = new Sequelize(dbName, null, null, {
+  dialect: 'sqlite',
+  storage: 'data.db',
   port,
   define: {
     underscored: true
@@ -19,45 +17,55 @@ const sequelize = new Sequelize(dbName, account, password, {
     idle: 10000
   },
   logging: () => {}
-});
-
-const Folder = sequelize.define('folder', {
-  path: STRING,
-  name: STRING
 })
 
 const File = sequelize.define('file', {
   bucket: STRING,
-  path: STRING,
+  parentDir: STRING,
+  dir: STRING,
   name: STRING,
   fsize: INTEGER,
-  mimeType: STRING,
-  url: STRING
+  mimeType: STRING
 })
 
-Folder.sync()
 File.sync()
 
-const createUrl = query => `http://${getUrl(bucket)[0]}/${query.path}/${query.filename}`;
+// const createUrl = query => `http://${getUrl(bucket)[0]}/${query.path}/${query.filename}`
 
 export async function insertFile(data) {
-  const { path = '', name, fsize, mimeType } = data
+  const delimiter = '/'
+  const { bucket, key, fsize, mimeType } = data
+  const keyAttr = key.split(delimiter).reverse()
+  const name = keyAttr[0]
+  const dir = keyAttr.length > 1 ? keyAttr.slice(1).join(delimiter).reverse() : ''
+  const parentDir = keyAttr.length > 2 ? keyAttr.slice(2).join(delimiter).reverse() : ''
   const file = await File.create({
-    path,
+    bucket,
+    parentDir,
+    dir,
     name,
     fsize,
     mimeType
-  });
+  })
 
-  // 上传真实cdn
+  return re
+}
 
-  return re;
+export async function getDirs(data) {
+  const dirs = await File.findAll({
+    attributes: [[sequelize.literal('distinct `dir`'),'dir']],
+    where: {
+      bucket: data.bucket,
+      parentDir: data.dir || ''
+    }
+  })
 }
 
 export async function getFiles(data) {
   const files = await File.findAll({
+    attributes: ['name', 'fsize', 'mimeType'],
     where: {
-      path: data.path || ''
+      dir: data.dir || ''
     },
     limit: +data.pageSize,
     offset: data.pageSize * (data.page - 1)
@@ -68,8 +76,9 @@ export async function getFiles(data) {
 
 export async function getFile(data) {
   const file = await File.findOne({
+    attributes: ['name', 'fsize', 'mimeType'],
     where: {
-      path: data.path,
+      dir: data.dir || '',
       name: data.name
     }
   });

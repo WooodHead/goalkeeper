@@ -1,8 +1,10 @@
 import * as types from '../mutation-types'
 
 const state = {
-  accessKey: '',
-  secretKey: '',
+  // accessKey: '',
+  // secretKey: '',
+  accessKey: 'yJjmnu0ICBbHB09eHC3yDV0RJG5XDlawtS_R86zM',
+  secretKey: 'zmeHO9nuKVZou94L4T7I1Dxd-WN1FabGuGmGxFIA',
   lastAccessKey: '',
   lastSecretKey: '',
   showSetting: false,
